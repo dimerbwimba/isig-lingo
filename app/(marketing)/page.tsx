@@ -8,7 +8,7 @@ export default function Home() {
   return (
     <div className="max-w-[988px] mx-auto flex-1 w-full flex flex-col lg:flex-row items-center justify-center p-4 gap-2">
       <div className=" relative w-[240px] h-[240px] 
-            lg:w-[400px] lg:h-[400px] mb-6 lg:mb-0">
+            lg:w-[400px] lg:h-[400px] mb-6 lg:mb-0 ">
         <Image src={"/hero.svg"} fill alt="ISIG LINGO" />
       </div>
       <div className=" flex flex-col items-center gap-y-8">
@@ -18,7 +18,7 @@ export default function Home() {
             ISIG LINGO
           </span>
         </h1>
-      <div className=" space-y-1">
+      <div className=" flex flex-col items-center gap-y-3 max-w-[330px] w-full ">
         <ClerkLoading>
           <Loader className=" h-5 w-5 text-muted-foreground animate-spin" />
         </ClerkLoading>
@@ -33,7 +33,6 @@ export default function Home() {
                 Get started
               </Button>
             </SignUpButton>
-            <br/>
             <SignInButton
                 mode="modal"
                 afterSignInUrl="/learn"
