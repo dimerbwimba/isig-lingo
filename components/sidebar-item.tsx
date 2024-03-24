@@ -21,7 +21,7 @@ const SidebarItem = ({ label, iconSrc, href}:Props) => {
         >
             <Link href={href}>
                 <Image src={iconSrc} alt={label} className="mr-5" height={32} width={32} />
-                {label}
+                <span className=" font-bold text-md">{label}</span>
             </Link>
         </Button>
      );
