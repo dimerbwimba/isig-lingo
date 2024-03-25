@@ -38,6 +38,8 @@ export const Unit=({
                             <LessonButton
                                 key={lesson.id}
                                 id={lesson.id}
+                                title={title}
+                                description={description}
                                 index={index}
                                 totalCount={lessons.length-1}
                                 current={isCurrent} //TODO:update hardcoded true
