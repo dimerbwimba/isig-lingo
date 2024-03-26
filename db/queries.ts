@@ -118,7 +118,6 @@ export const getCourseProgress = cache(async ()=>{
                 challenge.challengeProgress.some((progress)=> progress.completed === false)
             })
         })
-        console.log(firstUncompletedLesson);
     return {
         activeLesson: firstUncompletedLesson,
         activeLessonId: firstUncompletedLesson?.id

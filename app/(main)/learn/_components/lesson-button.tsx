@@ -152,7 +152,7 @@ export const LessonButton = ({
                             {showStart && 
                             <div 
                             className={
-                            cn(`transform transition duration-500 ease-in-out  absolute right-1/6 left-1/6 px-3 py-2.5 font-bold  text-white bg-green-500 rounded-xl w-80 z-10 `,
+                            cn(` transform transition duration-500 ease-in-out  absolute right-1/6 left-1/6 px-3 py-2.5 font-bold  text-white bg-green-500 rounded-xl w-80 z-10 `,
                             locked && " bg-gray-100 border-4 text-black text-opacity-30 ")}>
                                 <div className="">
                                     <div className=" mb-5 space-y-1">

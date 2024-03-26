@@ -1,4 +1,5 @@
 import { Progress } from "@/components/ui/progress";
+import { useOutModal } from "@/store/user-out-model";
 import { InfinityIcon, X } from "lucide-react";
 import Image from "next/image";
 
@@ -9,11 +10,12 @@ type Props = {
 }
 
 export const Hearder = ({percentage,hasActiveSubscription,hearts}:Props)=>{
+    const {open} = useOutModal()
     return(
         <header className="lg:pt-[50px] pt-[20px] px-10 flex gap-x-7 
           items-center justify-between max-w-[1140px] max-auto w-full ">
             <X 
-                onClick={()=>{}}
+                onClick={open}
                 className=" text-slate-500 hover:opacity-75 transition cursor-pointer"
             />
             <Progress value={percentage}  />
