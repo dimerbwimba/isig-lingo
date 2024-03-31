@@ -115,14 +115,14 @@ export const LessonButton = ({
                                     <div className=" mb-5 space-y-1">
                                         <p className="text-sm">{description}</p>
                                         <p className=" font-normal">
-                                            Leçon 0 sur 3
+                                            Vous avez couvert {percentage}% de votre leçon
                                         </p>
                                     </div>
                                     <Link
                                         href={href}
                                         aria-disabled={locked}>
                                         <Button variant={locked ? "locked" : "secondary"} className=" border border-b-4 bg-white text-green-500 w-full hover:text-white">
-                                            Commencer
+                                           {percentage > 0 ? "Continuer" :"Commencer"} 
                                         </Button>
                                     </Link>
                                 </div>
@@ -152,22 +152,32 @@ export const LessonButton = ({
                             {showStart && 
                             <div 
                             className={
-                            cn(` transform transition duration-500 ease-in-out  absolute right-1/6 left-1/6 px-3 py-2.5 font-bold  text-white bg-green-500 rounded-xl w-80 z-10 `,
-                            locked && " bg-gray-100 border-4 text-black text-opacity-30 ")}>
-                                <div className="">
+                            cn(`absolute  w-64 z-20 rounded-lg bg-green-500 p-4 shadow-lg transition duration-150 ease-in-out `,
+                            locked && " bg-gray-100 border-2 text-black text-opacity-30 "
+                            , !locked && " text-white")}>
+                                {locked ? <div className="">
                                     <div className=" mb-5 space-y-1">
-                                        <p className="text-lg">{description}</p>
-                                        <p className=" font-semibold">
+                                        <p className="text-normal font-black">{description}</p>
+                                        <p className="">
                                             Termine tous les niveaux précédents pour débloquer celui-ci !
                                         </p>
                                     </div>
                                    <div className=" text-center text-normal w-full bg-gray-200 p-2 rounded-lg">
                                     PAS ENCORE DEBLOQUE
                                    </div>
-                                </div>
-                                <div className=" absolute left-1/2 -top-2
-                                        w-3 h-3  bg-gray-100 border-l-4 border-t-4 transform  rotate-45
-                                        "/>
+                                </div>:<div className="">
+                                    <div className=" mb-5 space-y-1">
+                                        <p className="text-normal font-black">{description}</p>
+                                        <p className="">
+                                        Montre ce dont tu es capable avec le Défi Légendaire
+                                        </p>
+                                    </div>
+                                   <Button  variant={"primary"} className=" w-full">
+                                        S'entraîner +5 XP
+                                   </Button>
+                                   
+                                </div>}
+                                <div className={cn(`absolute left-6 -top-2 w-3 h-3  bg-gray-100 border-l-4 border-t-4 transform  rotate-45`, !locked && " bg-green-500 -top-1 border-green-500")}/>
                             </div>}
                         </div>
                     )
