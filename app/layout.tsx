@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 
-import { Inter } from "next/font/google";
+import { Nunito_Sans } from "next/font/google";
 import "./globals.css";
 
 import { ClerkProvider } from '@clerk/nextjs'
 
 
-const font = Inter({ subsets: ["latin"] });
+const font = Nunito_Sans({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Create Next App",

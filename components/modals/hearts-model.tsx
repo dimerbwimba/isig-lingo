@@ -41,12 +41,7 @@ export const FinishHeartsModal = () => {
                 </DialogTitle>
                 <DialogDescription className="">
                     <div className=" space-y-2 border-2 p-2 rounded-xl">
-                        <Image
-                            src={"/super.svg"}
-                            alt="super"
-                            height={80}
-                            width={80}
-                        />
+                       
                         <div className=" text-lg">
                             Abonnés toi sur <span className=" bg-slate-200 px-1 rounded-lg text-orange-500 font-bold"> <TrendingUp className=" inline-flex" /> Super lingo</span> pour des vies illimités ou achetez-les dans le magasin
 
