@@ -7,6 +7,7 @@ import { Check, Crown, Star } from "lucide-react";
 import { CircularProgressbarWithChildren } from "react-circular-progressbar";
 import { useState } from "react";
 import { useOutsideClick } from "@/hooks/click-out-side";
+import { useRouter } from "next/navigation";
 
 type Props = {
     id: number;
@@ -28,6 +29,7 @@ export const LessonButton = ({
     locked,
     current,
     percentage }: Props) => {
+    const router = useRouter()
     const [showStart, setShowStart] = useState(false)
     const ref = useOutsideClick(() => {
         setShowStart(false)
@@ -172,7 +174,7 @@ export const LessonButton = ({
                                         Montre ce dont tu es capable avec le Défi Légendaire
                                         </p>
                                     </div>
-                                   <Button  variant={"primary"} className=" w-full">
+                                   <Button onClick={()=> router.push(`/lesson/${id}`)  }  variant={"primary"} className=" w-full">
                                         S'entraîner +5 XP
                                    </Button>
                                    

@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useTransition } from "react";
-import { challengeOptions, challenges, challengesEnum } from "@/db/schema";
+import { challengeOptions, challenges } from "@/db/schema";
 import { Hearder } from "./hearder";
 import { QuestionBubble } from "./question-bubble";
 import { Challenge } from "./challenge";
@@ -9,6 +9,11 @@ import { Footer } from "./footer";
 import { toast } from "sonner";
 import { upsertChallengeProgress } from "@/actions/challenge-progress";
 import { reduceHearts } from "@/actions/user-progress";
+import { useAudio, useMount } from "react-use";
+import { FinishView } from "./finish-view";
+import { useRouter } from "next/navigation";
+import { useFinishHearts } from "@/store/use-hearts-model";
+import { usePracticeModel } from "@/store/use-practice-model";
 
 type Props = {
     initialPercentage: number;
@@ -29,10 +34,19 @@ export const Quiz = ({
     userSubscription,
     initialLessonId
 }: Props) => {
+    const { open: openFinishHeartsModal } = useFinishHearts()
+    const {open: openPracticeModal} = usePracticeModel()
+
+    const router = useRouter()
+    const [lessonId] = useState(initialLessonId)
+    const [correctAudio, _c, correctControls] = useAudio({ src: "/correct.wav" })
+    const [incorrectAudio, _inc, incorrectControls] = useAudio({ src: "/incorrect.wav" })
     const [pending, startTransition] = useTransition()
     const [hearts, setHearts] = useState(initialHearts)
     const [status, setStatus] = useState<"correct" | "wrong" | "none">("none")
-    const [percentage, setPercentage] = useState(initialPercentage)
+    const [percentage, setPercentage] = useState(()=>{
+        return initialPercentage===100 ? 0 : initialPercentage
+    })
     const [challenges] = useState(initialLessonChallenges);
     const [activeIndex, setActiveIndex] = useState(() => {
         const uncompletedIndex = challenges.findIndex((challenge) => !challenge.completed)
@@ -51,7 +65,6 @@ export const Quiz = ({
         if (status !== "none") return;
         setSelectedOption(id)
     }
-
     const onContinue = () => {
         if (!selectedOption) return;
         if (status === "wrong") {
@@ -71,15 +84,17 @@ export const Quiz = ({
         if (!correctOption) {
             return;
         }
-
         if (correctOption.id === selectedOption) {
             startTransition(() => {
                 upsertChallengeProgress(challenge.id)
                     .then((response) => {
+                        
                         if (response?.error === "hearts") {
-                            console.log("Missing hearts")
+                            openFinishHeartsModal()
                             return;
                         }
+
+                        correctControls.play()
                         setStatus("correct")
                         setPercentage((prev) => prev + 100 / challenges.length)
 
@@ -87,71 +102,88 @@ export const Quiz = ({
                             setHearts((prev) => Math.min(prev + 1, 5))
                         }
 
-                    }).catch((error)=> toast.error("Something went wrong. Please try again"))
-                    
+                    }).catch((error) => toast.error("Something went wrong. Please try again"))
+
             })
         } else {
-            startTransition(()=>{
+            startTransition(() => {
                 reduceHearts(challenge.id)
-                    .then((response)=>{
-                        if (response?.error) {
-                            console.error("Missing hearts")
+                    .then((response) => {
+                        if (response?.error==="hearts") {
+                            openFinishHeartsModal()
                             return
                         }
-
+                        incorrectControls.play();
                         setStatus("wrong");
                         if (!response?.error) {
-                            setHearts((prev)=> Math.max(prev-1,0))
+                            setHearts((prev) => Math.max(prev - 1, 0))
                         }
-                    }).catch((error)=> toast.error("Something Went Wrong please try again   "))
+                    }).catch((error) => toast.error("Something Went Wrong please try again   "))
             })
         }
 
 
     }
+    useMount(() =>{
+        if (initialPercentage === 100) {
+            openPracticeModal()
+        }
+    })
+
     if (!challenge) {
         return (
-            <div>hello world</div>
+            <>
+                <FinishView hearts={hearts} challenges={challenges} />
+                <Footer
+                    lessonId={lessonId}
+                    status="completed"
+                    onCheck={() => router.push("/learn")}
+                />
+            </>
         )
     }
     const title = challenge.type === "ASSIST"
-        ? "Select the correct meaning" : challenge.question
+        ? "Selectionner la correct signification" : challenge.question
     return (
-        <div className=" h-full">
-            <Hearder
-                hearts={hearts}
-                percentage={percentage}
-                hasActiveSubscription={!!userSubscription?.isActive}
-            />
-            <div className=" flex-1">
-                <div className=" h-full flex items-center justify-center">
-                    <div className=" py-5 lg:min-h-[350px] lg:w-[600px] w-full px-6 lg:px-0 flex flex-col gap-y-12 ">
-                        <h1 className=" text-lg lg:text-3xl text-center lg:text-start font-bold text-neutral-700">
-                            {title}
-                        </h1>
-                        <div>
-                            {challenge.type === "ASSIST" && (
-                                <QuestionBubble question={challenge.question} />
-                            )}
-                            <Challenge
-                                options={options}
-                                onSelect={onSelect}
-                                status={status}
-                                selectedOption={selectedOption}
-                                disabled={pending}
-                                type={challenge.type}
+        <>
+                {incorrectAudio}
+                {correctAudio}
+            <div className=" h-full">
+                <Hearder
+                    hearts={hearts}
+                    percentage={percentage}
+                    hasActiveSubscription={!!userSubscription?.isActive}
+                />
+                <div className=" flex-1">
+                    <div className=" h-full flex items-center justify-center">
+                        <div className=" py-5 lg:min-h-[350px] lg:w-[600px] w-full px-6 lg:px-0 flex flex-col gap-y-12 ">
+                            <h1 className=" text-lg lg:text-3xl text-center lg:text-start font-bold text-neutral-700">
+                                {title}
+                            </h1>
+                            <div>
+                                {challenge.type === "ASSIST" && (
+                                    <QuestionBubble question={challenge.question} />
+                                )}
+                                <Challenge
+                                    options={options}
+                                    onSelect={onSelect}
+                                    status={status}
+                                    selectedOption={selectedOption}
+                                    disabled={pending}
+                                    type={challenge.type}
 
-                            />
+                                />
+                            </div>
                         </div>
-                    </div>
 
+                    </div>
                 </div>
+                <Footer
+                    disabled={pending || !selectedOption}
+                    status={status}
+                    onCheck={onContinue}
+                />
             </div>
-            <Footer
-                disabled={pending || !selectedOption}
-                status={status}
-                onCheck={onContinue}
-            />
-        </div>
+        </>
     )
 }

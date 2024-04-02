@@ -42,6 +42,13 @@ const main = async () =>{
                 title:"Unit 1",
                 description:"Apprendre le base de l'Anglais",
                 order:1
+            },
+            {
+                id:2,
+                courseId:1,//english
+                title:"Unit 2",
+                description:"Apprendre Hello world",
+                order:1
             }
          ])
 
@@ -59,7 +66,6 @@ const main = async () =>{
                 order:2
             },
          ])
-
          await db.insert(schema.challenges).values([
             {
                 id:1,
@@ -90,8 +96,6 @@ const main = async () =>{
                 type:"ASSIST"
             },
          ])
-
-
          await db.insert(schema.challengeOptions).values([
             {
                 id:1,

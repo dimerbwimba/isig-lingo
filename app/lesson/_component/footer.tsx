@@ -9,7 +9,7 @@ type Props = {
     onCheck: () => void;
     status: "correct" | "wrong" | "none" | "completed";
     disabled?: boolean;
-    lessonId?: boolean;
+    lessonId?: number;
 }
 
 export const Footer = ({
@@ -45,10 +45,11 @@ export const Footer = ({
                 {status === "completed" && (
                     <Button 
                         variant={"default"} 
+                        className=" font-bold text-slate-500"
                         size={isMobile ? "sm":"lg"} 
                         onClick={()=> window.location.href+`/lesson/${lessonId}`}
                     >
-                        Continuer la pratique
+                       revoir mes réponse
                     </Button>
                 )}
 
