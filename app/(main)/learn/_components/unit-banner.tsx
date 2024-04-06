@@ -1,14 +1,17 @@
 import { Button } from "@/components/ui/button";
+import { chapters } from "@/db/schema";
 import { ArrowLeftCircle } from "lucide-react";
 import Image from "next/image";
 
 type Props={
     title:string;
     description:string;
+    chapter:typeof chapters.$inferSelect
 }
 
-export const UnitBanner = ({title, description}:Props)=>{
+export const UnitBanner = ({title, description, chapter}:Props)=>{
     return (
+        
         <div className=" w-full rounded-xl bg-green-500 p-5
          text-white items-center justify-between">
             <div className=" space-y-2.5">
@@ -16,7 +19,7 @@ export const UnitBanner = ({title, description}:Props)=>{
                     <div>
                         <div className=" flex items-center space-x-4 ">
                          <ArrowLeftCircle className=" w-5 h-5 opacity-70"/>
-                         <h1 className=" text-lg  uppercase font-bold opacity-70">Chapter 1, {title}</h1>
+                         <h1 className=" text-lg  uppercase font-bold opacity-70">{chapter.title}, {title}</h1>
                         </div>
                         <p className=" text-xl font-bold">{description}</p>
                     </div>

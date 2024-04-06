@@ -1,9 +1,10 @@
 import { cn } from "@/lib/utils";
+import { Icon } from "next/dist/lib/metadata/types/metadata-types";
 import Image from "next/image";
 
 type Props = {
-    value : number;
-    variant : "points" | "hearts"
+    value : number|any;
+    variant : "points" | "hearts" 
 }
 
 export const ResultCard = ({variant,value}:Props) =>{
@@ -25,9 +26,7 @@ export const ResultCard = ({variant,value}:Props) =>{
             variant === "points" && " text-orange-500"
             )}>
                 { variant === "points" && <Image src={"/points.svg"} alt={"Points"} 
-                    width={22} height={22} className="mr-2" />} 
-                 { variant === "hearts" &&      <Image src={"/heart.svg"} alt={"hearts"} 
-                    width={22} height={22} className=" mr-2" />}
+                    width={28} height={28} className="mr-2" />} 
                     {value}
            </div>
         </div>

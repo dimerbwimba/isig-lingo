@@ -23,7 +23,7 @@ type Props = {
         completed: boolean;
         challengeOptions: typeof challengeOptions.$inferSelect[]
     })[];
-    userSubscription: any // TODO:Replace with subscription DB
+    userSubscription: boolean // TODO:Replace with subscription DB
 }
 
 
@@ -133,7 +133,7 @@ export const Quiz = ({
     if (!challenge) {
         return (
             <>
-                <FinishView hearts={hearts} challenges={challenges} />
+                <FinishView isPro={userSubscription} hearts={hearts} challenges={challenges} />
                 <Footer
                     lessonId={lessonId}
                     status="completed"
@@ -152,7 +152,7 @@ export const Quiz = ({
                 <Hearder
                     hearts={hearts}
                     percentage={percentage}
-                    hasActiveSubscription={!!userSubscription?.isActive}
+                    hasActiveSubscription={userSubscription}
                 />
                 <div className=" flex-1">
                     <div className=" h-full flex items-center justify-center">

@@ -1,6 +1,7 @@
-import { lessons, units } from "@/db/schema";
+import { chapters, lessons, units } from "@/db/schema";
 import { UnitBanner } from "./unit-banner";
 import { LessonButton } from "./lesson-button";
+import { UnitHeader } from "./unit-hearder";
 
 type Props={
     id: number;
@@ -13,13 +14,15 @@ type Props={
     activeLesson:  typeof lessons.$inferSelect &{
         unit: typeof units.$inferSelect
     } | undefined;
-    activeLessonPercentage:number
+    activeLessonPercentage:number,
+    chapter: typeof chapters.$inferSelect
 }
 
 
 export const Unit=({
     id,
     order,
+    chapter,
     description,
     title,
     lessons, 
@@ -28,7 +31,7 @@ export const Unit=({
 }:Props)=>{
     return (
         <>
-           <UnitBanner title={title} description={description} />
+           { id !== 1 && <UnitHeader description={description}/>}
             <div className="flex items-center flex-col relative">
                 {
                     lessons.map((lesson, index)=>{

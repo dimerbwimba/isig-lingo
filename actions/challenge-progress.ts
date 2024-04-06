@@ -1,7 +1,8 @@
 "use server"
 
+import { POINTS_TO_WIN_AFTER_EACH_CHALLENGE } from "@/constants/constant";
 import db from "@/db/drizzle";
-import { getUserProgress } from "@/db/queries"
+import { getUserProgress, getUserSubscription } from "@/db/queries"
 import { challengeProgress, challenges, userProgress } from "@/db/schema";
 import { auth } from "@clerk/nextjs"
 import { and, eq } from "drizzle-orm";
@@ -16,6 +17,7 @@ export const upsertChallengeProgress = async (challengeId: number) => {
     }
 
     const currentUserProgress = await getUserProgress();
+    const userSubscription = await getUserSubscription();
 
     if (!currentUserProgress) {
         throw new Error("User progress not found")
@@ -40,8 +42,8 @@ export const upsertChallengeProgress = async (challengeId: number) => {
 
     const isPractice = !!existingChallengeProgress
 
-    // TODO: Not if user has a subscription
-    if (currentUserProgress.hearts === 0 && !isPractice) {
+    
+    if (currentUserProgress.hearts === 0 && !isPractice && !userSubscription?.isActive) {
         return {
             error: "hearts"
         }
@@ -55,7 +57,7 @@ export const upsertChallengeProgress = async (challengeId: number) => {
 
         await db.update(userProgress).set({
             hearts: Math.min(currentUserProgress.hearts + 1, 5),
-            points: currentUserProgress.points + 10
+            points: currentUserProgress.points + POINTS_TO_WIN_AFTER_EACH_CHALLENGE
         }).where(eq(userProgress.userId, userId))
 
         revalidatePath("/learn")
@@ -74,7 +76,7 @@ export const upsertChallengeProgress = async (challengeId: number) => {
     })
 
     await db.update(userProgress).set({
-        points: currentUserProgress.points + 10,
+        points: currentUserProgress.points + POINTS_TO_WIN_AFTER_EACH_CHALLENGE,
     }).where(eq(userProgress.userId, userId))
 
     revalidatePath("/learn")

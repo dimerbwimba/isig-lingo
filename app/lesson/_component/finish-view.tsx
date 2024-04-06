@@ -2,13 +2,15 @@ import Image from "next/image"
 import { ResultCard } from "./result-card"
 import { challenges } from "@/db/schema"
 import { Firework } from "./firework";
+import { InfinityIcon } from "lucide-react";
 
 type Props ={
     challenges: typeof challenges.$inferSelect[];
     hearts:number;
+    isPro:boolean
 }
 
-export const FinishView= ({challenges,hearts}:Props)=>{
+export const FinishView= ({challenges,hearts, isPro}:Props)=>{
     return (
         
         <div className=" flex flex-col gap-y-4 max-w-lg mx-auto text-center items-center justify-center h-full">
@@ -29,7 +31,7 @@ export const FinishView= ({challenges,hearts}:Props)=>{
                     />
                     <ResultCard
                         variant="hearts"
-                        value={hearts}                    
+                        value={isPro ? <InfinityIcon className=" w-7 h-7 stroke-[3]"/> : hearts}                    
                     />
                 </div>
              </div>

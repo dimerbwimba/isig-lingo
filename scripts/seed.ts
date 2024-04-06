@@ -21,6 +21,7 @@ const main = async () =>{
         await db.delete(schema.challenges)
         await db.delete(schema.challengeProgress)
         await db.delete(schema.challengeOptions)
+        await db.delete(schema.userSubscription)
 
         await db.insert(schema.courses).values([
             {
@@ -35,66 +36,134 @@ const main = async () =>{
             }
         ])
 
-         await db.insert(schema.units).values([
+        await db.insert(schema.chapters).values([
             {
                 id:1,
-                courseId:1,//english
-                title:"Unit 1",
-                description:"Apprendre le base de l'Anglais",
+                courseId:1,
+                description:"Hello!",
+                title:"Chapitre 1",
                 order:1
             },
             {
                 id:2,
-                courseId:1,//english
-                title:"Unit 2",
-                description:"Apprendre Hello world",
+                courseId:1,
+                description:"Hello world 2",
+                title:"Chapitre 2",
                 order:1
-            }
-         ])
+            },
+            
+        ])
+
+        await db.insert(schema.units).values([
+            {  
+                id:1,
+                chapterId:1,//english
+                title:"Unit 1",
+                description:"Commande au café",
+                order:1
+            },   
+            {  
+                id:2,
+                chapterId:1,//english
+                title:"Unit 1",
+                description:"Commande new café",
+                order:2
+            },      
+        ])
+
+        await db.insert(schema.units).values([
+            {  
+                id:3,
+                chapterId:2,//english
+                title:"Unit 3",
+                description:"Présente vous au voisin",
+                order:2
+            },                   
+        ])
+
+
 
          await db.insert(schema.lessons).values([
             {
                 id:1,
                 unitId:1,// unit 1
                 title:"Apprendre les Bases des Salutations",
+                type:"NORMAL",
                 order:1
             },
             {
                 id:2,
                 unitId:1,// unit 1
                 title:"Faire les Premières Présentations",
-                order:2
+                order:2,
+                type:"NORMAL"
             },
          ])
-         await db.insert(schema.challenges).values([
-            {
-                id:1,
-                lessonId:1,
-                question:'Choisis la bonne signification du mot "merci" ',
-                order:1,
-                type:"SELECTED"
-            },
-            {
-                id:2,
-                lessonId:1,
-                question:'"merci"',
-                order:2,
-                type:"ASSIST"
-            },
+         await db.insert(schema.lessons).values([
             {
                 id:3,
-                lessonId:2,
-                question:'Choisis la bonne signification du mot "merci" ',
-                order:3,
-                type:"SELECTED"
+                unitId:2,// unit 2
+                title:"Apprendre les Bases des Salutations",
+                type:"NORMAL",
+                order:3
             },
             {
                 id:4,
-                lessonId:2,
-                question:'"merci"',
+                unitId:2,// unit 2
+                title:"Faire les Premières Présentations",
                 order:4,
-                type:"ASSIST"
+                type:"NORMAL"
             },
+         ])
+         await db.insert(schema.lessons).values([
+            {
+                id:5,
+                unitId:3,// unit 2
+                title:"Apprendre les Bases des Salutations",
+                type:"NORMAL",
+                order:3
+            },
+            {
+                id:6,
+                unitId:3,// unit 2
+                title:"Faire les Premières Présentations",
+                order:4,
+                type:"NORMAL"
+            },
+         ])
+
+
+         await db.insert(schema.challenges).values([
+            {
+               id:1,
+               lessonId:1,
+               question:"Choisis la bonne signification",
+               type:"ASSIST",
+               order:1
+            },
+            {
+                id:2,
+                lessonId:2,
+                question:"Choisis la bonne signification",
+                type:"ASSIST",
+                order:2
+             },
+             {
+                id:3,
+                lessonId:3,
+                question:"Choisis la bonne signification",
+                type:"ASSIST",
+                order:3
+             },
+             {
+                id:4,
+                lessonId:4,
+                question:"Choisis la bonne signification",
+                type:"ASSIST",
+                order:4
+             },
+             
+
          ])
          await db.insert(schema.challengeOptions).values([
             {
@@ -135,6 +204,7 @@ const main = async () =>{
             {
                 id:5,
                 challengeId:2,
+                imageSrc:"man.svg",
                 text:"small",
                 correct:false,
                 audioSrc:"en_small.mp3"
@@ -142,6 +212,7 @@ const main = async () =>{
             {
                 id:6,
                 challengeId:2,
+                imageSrc:"man.svg",
                 text:"hello",
                 correct:false,
                 audioSrc:"en_hello.mp3"
@@ -149,6 +220,7 @@ const main = async () =>{
             {
                 id:7,
                 challengeId:2,
+                imageSrc:"man.svg",
                 text:"thank you",
                 correct:true,
                 audioSrc:"en_thank_you.mp3"
@@ -156,10 +228,12 @@ const main = async () =>{
             {
                 id:8,
                 challengeId:2,
+                imageSrc:"man.svg",
                 text:"happy",
                 correct:false,
                 audioSrc:"en_happy.mp3"
-            }            
+            },
+            
          ])
          await db.insert(schema.challengeOptions).values([
             {
@@ -231,6 +305,7 @@ const main = async () =>{
             },
             
          ])
+
 
         console.log("Seeding finished")
     } catch (error) {
